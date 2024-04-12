@@ -4,25 +4,14 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/overlorddamygod/url-shortener/types"
 )
 
-type ErrorResponse struct {
-	Message string `json:"message" binding:"required"`
-}
-
-type ShortenUrlRequest struct {
-	URL string `json:"url" binding:"required"`
-}
-
-type ShortenUrlResponse struct {
-	ShortUrl string `json:"short_url" binding:"required"`
-}
-
 func (s *Server) ShortenUrlHandler(c *gin.Context) {
-	var req ShortenUrlRequest
+	var req types.ShortenUrlRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, ErrorResponse{
+		c.JSON(http.StatusBadRequest, types.ErrorResponse{
 			Message: "invalid request",
 		})
 		return
@@ -30,7 +19,7 @@ func (s *Server) ShortenUrlHandler(c *gin.Context) {
 
 	shortCode, err := s.service.GetShortCode(req.URL)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, ErrorResponse{
+		c.JSON(http.StatusBadRequest, types.ErrorResponse{
 			Message: err.Error(),
 		})
 		return
@@ -42,7 +31,7 @@ func (s *Server) ShortenUrlHandler(c *gin.Context) {
 	}
 	shortUrl := protocol + "://" + c.Request.Host + "/" + shortCode
 
-	c.JSON(http.StatusOK, ShortenUrlResponse{
+	c.JSON(http.StatusOK, types.ShortenUrlResponse{
 		ShortUrl: shortUrl,
 	})
 }
@@ -53,7 +42,7 @@ func (s *Server) RedirectHandler(c *gin.Context) {
 	longUrl, err := s.service.GetLongUrl(shortCode)
 
 	if err != nil {
-		c.JSON(http.StatusNotFound, ErrorResponse{
+		c.JSON(http.StatusNotFound, types.ErrorResponse{
 			Message: err.Error(),
 		})
 		return

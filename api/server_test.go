@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/overlorddamygod/url-shortener/api"
+	"github.com/overlorddamygod/url-shortener/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -30,7 +31,7 @@ func TestUrlShortenerServer(t *testing.T) {
 		router.ServeHTTP(w, req)
 
 		assert.Equal(t, http.StatusBadRequest, w.Code)
-		var response api.ErrorResponse
+		var response types.ErrorResponse
 
 		assert.NoError(t, json.NewDecoder(w.Body).Decode(&response))
 		assert.Equal(t, "invalid request", response.Message)
@@ -50,7 +51,7 @@ func TestUrlShortenerServer(t *testing.T) {
 		router.ServeHTTP(w, req)
 
 		assert.Equal(t, http.StatusBadRequest, w.Code)
-		var response api.ErrorResponse
+		var response types.ErrorResponse
 
 		assert.NoError(t, json.NewDecoder(w.Body).Decode(&response))
 		assert.Equal(t, "invalid url", response.Message)
@@ -70,7 +71,7 @@ func TestUrlShortenerServer(t *testing.T) {
 		router.ServeHTTP(w, req)
 
 		assert.Equal(t, http.StatusOK, w.Code)
-		var response api.ShortenUrlResponse
+		var response types.ShortenUrlResponse
 
 		assert.NoError(t, json.NewDecoder(w.Body).Decode(&response))
 		assert.NotEmpty(t, response.ShortUrl)
