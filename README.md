@@ -16,6 +16,7 @@ A simple URL shortener service in Golang using SHA256 Algorithm and Base62 Encod
 
 ## Usage :
 
+### Run Locally
 ```bash
 user@main:~$ go run main.go
 
@@ -23,6 +24,22 @@ user@main:~$ go run main.go
 user@main:~$ go build main.go
 user@main:~$ ./main
 ```
+
+### Run with Docker
+```bash
+# Build and run with the provided script
+user@main:~$ ./build.sh
+user@main:~$ docker run -p 8080:8080 url-shortener
+
+# Or build manually
+user@main:~$ CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o url-shortener main.go
+user@main:~$ docker build -t url-shortener .
+user@main:~$ docker run -p 8080:8080 url-shortener
+
+# Or use docker-compose
+user@main:~$ docker compose up
+```
+
 After running the commands, the server runs on port `8080`; [http://localhost:8080](http://localhost:8080)
 ___
 ## **Run Tests**
